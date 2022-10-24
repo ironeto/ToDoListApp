@@ -137,16 +137,22 @@
                 renderItem={(rowData) => <View style={styles.containerTasks}>
                                           <Text style={styles.titleTasks}>{rowData.item.name}</Text>
                                           <Text style={styles.titleTasks}>{rowData.item.state}</Text>
-                                          <TouchableHighlight onPress={()=>{deleteTask(rowData.item.id)}}>
+                                            <View style={styles.cardButtonsStyle}>
                                               <View>
-                                                <Icon name="trash" size={30} color="#900" />
+                                                <TouchableHighlight onPress={()=>{deleteTask(rowData.item.id)}}>
+                                                    <View>
+                                                      <Icon name="trash" size={30} color="#900" />
+                                                    </View>
+                                                </TouchableHighlight>
                                               </View>
-                                          </TouchableHighlight>
-                                          <TouchableHighlight onPress={()=>{openModal(rowData.item.id)}}>
-                                              <View>
-                                                <Icon name="edit" size={30} color="#900" />
+                                              <View style={{paddingLeft:10}}>
+                                                <TouchableHighlight onPress={()=>{openModal(rowData.item.id)}}>
+                                                    <View>
+                                                      <Icon name="edit" size={30} color="#900" />
+                                                    </View>
+                                                </TouchableHighlight>
                                               </View>
-                                          </TouchableHighlight>
+                                          </View>
                                         </View>
                 }
                 ListHeaderComponent={() => (!tasks.length ? <Text style={styles.emptyMessageStyle}>The To Do List is empty</Text>  : null)}
@@ -177,6 +183,9 @@ const styles = StyleSheet.create({
   },
   addFieldStyle: {
     flexDirection:'row', width: window.width, margin: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:4, borderColor:'#888', borderRadius:10, backgroundColor:'#fff'
+  },
+  cardButtonsStyle: {
+    flexDirection:'row',  alignItems:'center', justifyContent:'center'
   },
   centered: {
     position: "absolute",
