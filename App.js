@@ -24,6 +24,7 @@
  } from 'react-native';
  import { SearchBar } from 'react-native-elements';
  import Icon from 'react-native-vector-icons/FontAwesome';
+ import Modal from "react-native-modal";
 
  let allTasks = [];
  const App = () => {
@@ -50,6 +51,28 @@
     const [taskName, setTaskName] = useState('');
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [editId, setEditId] = useState('');
+
+    const openModal = (id) => {
+      setModalVisible(!isModalVisible);
+      setEditId(id);
+    };
+
+    const closeModal = (option) => {
+
+      allTasks = allTasks.map(item => {
+            var temp = Object.assign({}, item);
+            if (temp.id === editId) {
+                temp.state = option;
+            }
+            return temp;
+        });
+
+        setModalVisible(!isModalVisible);
+        setTasks(allTasks);
+        forceUpdate();
+    };
 
     const updateSearch = (search) => {
       setSearch(search);
@@ -98,6 +121,16 @@
               </View>
 
 
+              <Modal isVisible={isModalVisible}>
+              <View style={styles.centered}>
+                <Text style={styles.title}>Change the Task Status</Text>
+                <Button title="ToDo" onPress={ () => closeModal('ToDo')} />
+                <Button title="Doing" onPress={ () => closeModal('Doing')} />
+                <Button title="Completed" onPress={ () => closeModal('Completed')} />
+              </View>
+              </Modal>
+
+
             <FlatList
                 data={tasks}
                 keyExtractor={(item, index) => item.id}
@@ -107,6 +140,11 @@
                                           <TouchableHighlight onPress={()=>{deleteTask(rowData.item.id)}}>
                                               <View>
                                                 <Icon name="trash" size={30} color="#900" />
+                                              </View>
+                                          </TouchableHighlight>
+                                          <TouchableHighlight onPress={()=>{openModal(rowData.item.id)}}>
+                                              <View>
+                                                <Icon name="edit" size={30} color="#900" />
                                               </View>
                                           </TouchableHighlight>
                                         </View>
@@ -139,7 +177,19 @@ const styles = StyleSheet.create({
   },
   addFieldStyle: {
     flexDirection:'row', width: window.width, margin: 10, padding:4, alignItems:'center', justifyContent:'center', borderWidth:4, borderColor:'#888', borderRadius:10, backgroundColor:'#fff'
-  }
+  },
+  centered: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    marginTop: 100,
+    marginBottom: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+  },
 });
 
 export default App;
